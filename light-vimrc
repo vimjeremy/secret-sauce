@@ -1,0 +1,70 @@
+" This is a lightweight vimrc that is usable
+" You can add it to your server to use over ssh or to a liveusb installer
+" Thats what i use it for atleast
+
+
+" Install vim-plug
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+" Automatically install missing plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source $MYVIMRC
+\| endif
+
+" Install plugins
+call plug#begin()
+
+Plug 'tpope/vim-fugitive'
+
+" Aesthetics
+Plug 'ghifarit53/tokyonight-vim'
+Plug 'itchyny/lightline.vim'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+
+call plug#end()
+
+" ========= START OF CONFIG =================
+
+let mapleader = " "
+filetype plugin indent on
+set expandtab
+set shiftwidth=2
+set softtabstop=2
+set tabstop=2
+set number
+set cursorline
+set smartindent
+set showmatch
+set backspace=indent,eol,start
+set noswapfile
+set undofile
+set undodir=$HOME/.vim/undo//
+set nowrap
+set termguicolors
+syntax on
+
+" Create undodir
+if !isdirectory(&undodir)
+    call mkdir(&undodir, "p", 0700)
+endif
+
+" Set the colorscheme and enable lightline
+let g:tokyonight_style = 'night'
+let g:tokyonight_enable_italic = 1
+let g:lightline = {'colorscheme' : 'tokyonight'}
+colorscheme tokyonight
+set laststatus=2
+
+" Keybinds
+nnoremap <leader>e :Ex<CR>
+nnoremap <leader>ff :Files<CR>
+nnoremap <leader>fb :Buffers<CR>
+nnoremap <leader>fh :Helptags<CR>
+nnoremap <leader>fg :Rg<Space>
+nnoremap <C-i> :bprevious<CR>
+nnoremap <C-o> :bnext<CR>
