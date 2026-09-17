@@ -26,6 +26,7 @@
 (setq inhibit-startup-screen t)
 (ido-mode 1)
 (ido-everywhere 1)
+(setq dired-listing-switches "-AlhDX --group-directories-first")
 
 (set-frame-font "Iosevka NFP 22" nil t)
 (my/require-package 'gruber-darker-theme)
