@@ -1,0 +1,49 @@
+;; -*- lexical-binding: t; -*-
+(setq custom-file "~/.emacs.custom")
+(when (file-exists-p custom-file) (load custom-file))
+(setq warning-suppress-log-types '((files missing-lexbind-cookie)))
+(setq auto-save-list-file-prefix "~/.Trash/")
+(setq backup-directory-alist            '((".*" . "~/.Trash")))
+(setq auto-save-file-name-transforms
+      '((".*" "~/.Trash/" t)))
+
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+(package-refresh-contents)
+
+(defun my/require-package (package)
+  (unless (package-installed-p package)
+    (package-install package))
+  (require package))
+
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(menu-bar-mode -1)
+(column-number-mode 1)
+(global-display-line-numbers-mode 1)
+(setq inhibit-startup-screen t)
+(ido-mode 1)
+(ido-everywhere 1)
+
+(set-frame-font "Iosevka NFP 22" nil t)
+(my/require-package 'gruber-darker-theme)
+(load-theme 'gruber-darker)
+(global-set-key (kbd "<escape>") 'keyboard-quit)
+
+(setq evil-want-keybinding nil)
+(my/require-package 'evil)
+(my/require-package 'evil-collection)
+(setq evil-undo-system 'undo-redo)
+(setq evil-want-integration t)
+(evil-collection-init)
+(evil-mode 1)
+
+(my/require-package 'smex)
+(global-set-key (kbd "M-x") 'smex)
+
+;; set esc to quit the minibuffer
+(add-hook 'minibuffer-setup-hook
+          (lambda ()
+            (local-set-key [escape] 'abort-minibuffers)))

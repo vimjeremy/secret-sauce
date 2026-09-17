@@ -1,7 +1,12 @@
 # sway config i whipped up in 5 minutes and still use
-# only dep is autotiling which you install with either your package manager
-# or with pip
 
+# Deps:
+# https://github.com/ful1e5/BreezeX_Cursor
+# https://github.com/nwg-piotr/autotiling
+# https://github.com/davatorium/rofi
+# https://github.com/ryanoasis/nerd-fonts/releases -- Find Iosevka
+
+focus_follows_mouse no
 font pango:Iosevka NFP 16
 exec_always autotiling
 set $mod Mod4
@@ -12,6 +17,7 @@ set $right l
 set $term kitty
 set $menu 'rofi -show drun -font "Iosevka NFP 16"'
 
+seat * xcursor_theme BreezeX-Black 24
 output * mode 2560x1440@360Hz
 output * bg "~/.wallpapers/abducted.png" fill
 input type:keyboard {

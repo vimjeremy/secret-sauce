@@ -21,10 +21,10 @@ call plug#begin()
 Plug 'tpope/vim-fugitive'
 
 " Aesthetics
-Plug 'ghifarit53/tokyonight-vim'
-Plug 'itchyny/lightline.vim'
+Plug 'vim-airline/vim-airline'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
+Plug 'ThunderBoltCODMYT/gruber-darker.vim'
 
 call plug#end()
 
@@ -54,11 +54,8 @@ if !isdirectory(&undodir)
 endif
 
 " Set the colorscheme and enable lightline
-let g:tokyonight_style = 'night'
-let g:tokyonight_enable_italic = 1
-let g:lightline = {'colorscheme' : 'tokyonight'}
-colorscheme tokyonight
-set laststatus=2
+colorscheme gruber-darker
+let g:airline_theme = 'gruber_darker'
 
 " Keybinds
 nnoremap <leader>e :Ex<CR>
