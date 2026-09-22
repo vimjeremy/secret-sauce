@@ -1,50 +1,61 @@
-;; -*- lexical-binding: t; -*-
-(setq custom-file "~/.emacs.custom")
-(when (file-exists-p custom-file) (load custom-file))
-(setq warning-suppress-log-types '((files missing-lexbind-cookie)))
-(setq auto-save-list-file-prefix "~/.Trash/")
-(setq backup-directory-alist            '((".*" . "~/.Trash")))
-(setq auto-save-file-name-transforms
-      '((".*" "~/.Trash/" t)))
+;; -*- lexical-binding: t; -*-                                                    
 
+;; Package setup
 (require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
-(package-refresh-contents)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(defvar my/package-contents-refreshed nil)
+(defun my/package-refresh ()
+  (when (not my/package-contents-refreshed)
+    (setq my/package-contents-refreshed t)
+    (package-refresh-contents)))
 
-(defun my/require-package (package)
+(defun my/require-one (package)
   (unless (package-installed-p package)
+    (my/package-refresh)
     (package-install package))
   (require package))
 
+(defun my/require (&rest packages)
+  (dolist (package packages)
+    (my/require-one package)))
+
+;; QoL
+(setq warning-suppress-log-types '((files missing-lexbind-cookie)))
+(fset 'yes-or-no-p 'y-or-n-p)
+(menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-(menu-bar-mode -1)
 (column-number-mode 1)
 (global-display-line-numbers-mode 1)
 (setq inhibit-startup-screen t)
-(ido-mode 1)
-(ido-everywhere 1)
 (setq dired-listing-switches "-AlhDX --group-directories-first")
 
-(set-frame-font "Iosevka NFP 22" nil t)
-(my/require-package 'gruber-darker-theme)
-(load-theme 'gruber-darker)
-(global-set-key (kbd "<escape>") 'keyboard-quit)
+;; Extra files
+(setq custom-file "~/.emacs.custom")
+(when (file-exists-p custom-file) (load custom-file))
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/backups/" t)))
 
-(setq evil-want-keybinding nil)
-(my/require-package 'evil)
-(my/require-package 'evil-collection)
-(setq evil-undo-system 'undo-redo)
-(setq evil-want-integration t)
+;; ======================== PLUGINS START HERE ===========================
+
+;; Aesthetics
+(my/require 'gruber-darker-theme)
+(load-theme 'gruber-darker)
+(set-frame-font "Iosevka NFP 22" nil t)
+
+;; Minibuffer
+(fido-vertical-mode)
+(my/require 'orderless)
+(setq completion-styles '(orderless basic)
+      completion-category-overrides '((file (styles partial-completion)))
+      completion-pcm-leading-wildcard t)
+
+;; EVIL mode >:[
+(setq evil-want-keybinding nil
+      evil-undo-system 'undo-redo
+      evil-want-integration t)
+(my/require 'evil 'evil-collection)
 (evil-collection-init)
 (evil-mode 1)
 
-(my/require-package 'smex)
-(global-set-key (kbd "M-x") 'smex)
-
-;; set esc to quit the minibuffer
-(add-hook 'minibuffer-setup-hook
-          (lambda ()
-            (local-set-key [escape] 'abort-minibuffers)))
+(put 'dired-find-alternate-file 'disabled nil)
