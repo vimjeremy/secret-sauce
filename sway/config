@@ -4,18 +4,35 @@
 # https://github.com/ful1e5/BreezeX_Cursor
 # https://github.com/nwg-piotr/autotiling
 # https://github.com/davatorium/rofi
-# https://github.com/ryanoasis/nerd-fonts/releases -- Find Iosevka
+# https://github.com/imputnet/helium-linux
+# https://github.com/saivert/pwvucontrol
+# https://github.com/be5invis/iosevka
+# https://github.com/GNOME/nautilus
+# xdg-desktop-portal-wlr & xdg-desktop-portal-gtk
+
+# desktop portal
+exec /usr/libexec/xdg-desktop-portal-gtk -r
+exec /usr/libexec/xdg-desktop-portal-wlr -r
+exec /usr/libexec/flatpak-portal -r
+exec "sh -c 'sleep 5;exec /usr/libexec/xdg-desktop-portal -r'"
+
+# apps
+exec_always autotiling
+exec_always gentoo-pipewire-launcher
+exec_always swaync
 
 focus_follows_mouse no
-font pango:Iosevka NFP 16
-exec_always autotiling
+font pango:Iosevka 16
 set $mod Mod4
 set $left h
 set $down j
 set $up k
 set $right l
 set $term kitty
-set $menu 'rofi -show drun -font "Iosevka NFP 16"'
+set $menu 'rofi -show drun -font "Iosevka 16"'
+set $browser 'helium'
+set $files 'nautilus'
+set $volume 'pwvucontrol'
 
 seat * xcursor_theme BreezeX-Black 24
 output * mode 2560x1440@360Hz
@@ -32,6 +49,15 @@ input type:keyboard {
 #
     # Start a terminal
     bindsym $mod+Return exec $term
+
+		# Start a web browser
+		bindsym $mod+b exec $browser
+
+		# Start a file browser
+		bindsym $mod+e exec $files
+
+		# Start volume mixer
+		bindsym $mod+v exec $volume
 
     # Kill focused window
     bindsym $mod+q kill
