@@ -20,6 +20,7 @@ exec "sh -c 'sleep 5;exec /usr/libexec/xdg-desktop-portal -r'"
 exec_always autotiling
 exec_always gentoo-pipewire-launcher
 exec_always swaync
+exec_always emacs --daemon
 
 focus_follows_mouse no
 font pango:Iosevka 16

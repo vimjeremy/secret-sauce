@@ -17,5 +17,6 @@ vim.o.undofile = true
 vim.o.undodir = os.getenv 'HOME' .. '/.cache/nvim/undodir'
 vim.o.winborder = 'single'
 
+vim.keymap.set('n', 'q:', '')
 vim.lsp.config('*', { root_markers = { '.git' } })
 vim.diagnostic.config { virtual_text = true }

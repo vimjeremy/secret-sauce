@@ -1,0 +1,215 @@
+#+TITLE: Emacs config
+#+AUTHOR: vimjeremy
+#+DESCRIPTION: Emacs config
+#+OPTIONS: toc:2
+
+* TOC :toc:
+- [[#straightel][Straight.el]]
+- [[#emacs][Emacs]]
+- [[#theme][Theme]]
+- [[#saving--recent][Saving + Recent]]
+- [[#evil-mode][Evil Mode]]
+- [[#orderless-matching][Orderless matching]]
+- [[#completions][Completions]]
+- [[#dired][Dired]]
+- [[#nerd-icons][Nerd icons]]
+- [[#org-mode][Org mode]]
+- [[#lsp][LSP]]
+
+* Straight.el
+#+begin_src emacs-lisp
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name
+          "straight/repos/straight.el/bootstrap.el"
+          (or (bound-and-true-p straight-base-dir)
+              user-emacs-directory)))
+        (bootstrap-version 7))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+
+  (straight-use-package 'use-package)
+  (setq straight-use-package-by-default t)
+  (use-package general)
+#+end_src
+
+* Emacs
+#+begin_src emacs-lisp
+  (use-package emacs
+    :init
+    (setq use-short-answers t
+          custom-file "~/.config/emacs/custom.el"
+  	      scroll-conservatively 101
+          auto-save-list-file-prefix "~/.Trash/"
+          backup-directory-alist            '((".*" . "~/.Trash"))
+          auto-save-file-name-transforms '((".*" "~/.Trash/" t))
+          default-frame-alist '((font . "Iosevka 22"))
+          inhibit-startup-screen t)
+    (when (file-exists-p custom-file) (load custom-file))
+    :config
+    (setq-default truncate-lines t
+  		            display-line-numbers-width 3
+  		            indent-tabs-mode nil
+  		            tab-width 2)
+    (tool-bar-mode -1)
+    (menu-bar-mode -1)
+    (scroll-bar-mode -1)
+    (global-display-line-numbers-mode 1)
+    (fringe-mode '(8 . 8))
+    :custom
+    (tab-always-indent 'complete)
+    (text-mode-ispell-word-completion nil)
+    (read-extended-command-predicate #'command-completion-default-include-p)
+    :general-config
+    ("<escape>" 'keyboard-escape-quit))
+#+end_src
+
+* Theme
+#+begin_src emacs-lisp
+  (use-package modus-vague
+    :straight (modus-vague :host github
+                           :repo "vimjeremy/modus-vague"
+                           :branch "main")
+    :config
+    (modus-themes-load-theme 'modus-vague))
+#+end_src
+
+* Saving + Recent
+#+begin_src emacs-lisp
+  (use-package recentf
+    :hook (after-init . recentf-mode)
+    :custom (recentf-max-saved-items 60))
+
+  (use-package savehist :hook (after-init . savehist-mode))
+#+end_src
+
+* Evil Mode
+#+begin_src emacs-lisp
+  ;; Undo and redo functionality
+  (use-package undo-fu)
+  (use-package undo-fu-session
+    :config
+    (setq undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
+    (undo-fu-session-global-mode))
+
+  (use-package evil
+    :after undo-fu-session
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    (setq evil-undo-system 'undo-fu)
+    :config
+    (evil-mode 1))
+
+  (use-package evil-collection
+    :after evil
+    :config
+    (evil-collection-init))
+#+end_src
+
+* Orderless matching
+#+begin_src emacs-lisp
+  (use-package orderless
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles partial-completion))))
+    (completion-pcm-leading-wildcard t))
+#+end_src
+
+* Completions
+#+begin_src emacs-lisp
+  (use-package marginalia :config (marginalia-mode))
+  (use-package vertico
+    :config
+    (vertico-mode)
+    (vertico-multiform-mode)
+    :custom
+    (vertico-resize t)
+    (vertico-count 10))
+
+  (use-package consult
+    :after vertico
+    :init
+    (setq consult-preview-key 'any)
+    (recentf-mode))
+
+  (use-package corfu
+    :hook (prog-mode . (lambda() (setq-local corfu-auto t)))
+    :init (global-corfu-mode)
+    :custom
+    (corfu-cycle t)
+    (corfu-auto-prefix 1))
+#+end_src
+
+* Dired
+#+begin_src emacs-lisp
+  (defun wdired-action(action)
+    (interactive)
+    (wdired-change-to-wdired-mode)
+    (call-interactively action))
+
+  (use-package dired
+    :after evil
+    :straight nil
+    :custom (dired-listing-switches "--group-directories-first -lAhX")
+    :general
+    (:keymaps 'dired-mode-map
+              :states 'normal
+              "I" (lambda () (interactive) (wdired-action #'evil-insert-line))
+              "A" (lambda () (interactive) (wdired-action #'evil-append-line))
+              "a" (lambda () (interactive) (wdired-action #'evil-append))
+              "i" (lambda () (interactive) (wdired-action #'evil-insert))))
+#+end_src
+
+* Nerd icons
+#+begin_src emacs-lisp
+  (use-package nerd-icons)
+  (use-package nerd-icons-dired
+    :after (dired nerd-icons)
+    :hook
+    (dired-mode . nerd-icons-dired-mode))
+
+  (use-package nerd-icons-completion
+    :after (nerd-icons)
+    :config
+    (nerd-icons-completion-mode))
+
+  (use-package nerd-icons-corfu
+    :after (corfu nerd-icons)
+    :init (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+#+end_src
+
+* Org mode
+#+begin_src emacs-lisp
+  (use-package org
+    :straight nil
+    :hook (org-mode . visual-line-mode)
+    :custom
+    (org-ellipsis "…")
+    (org-startup-intended t)
+    (org-checkbox-hierarchical-statistics t)
+    (org-hide-emphasis-markers t))
+
+  (use-package toc-org
+    :after org
+    :hook (org-mode . toc-org-mode))
+#+end_src
+
+* LSP
+#+begin_src emacs-lisp
+      (use-package mason
+        :ensure t
+        :config
+        (mason-setup))
+
+      (use-package eglot
+        :hook (prog-mode . eglot-ensure)
+        :custom (eglot-autoreconnect nil))
+#+end_src
+
