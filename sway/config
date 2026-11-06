@@ -1,14 +1,13 @@
 # sway config i whipped up in 5 minutes and still use
 
 # Deps:
-# https://github.com/ful1e5/BreezeX_Cursor
-# https://github.com/nwg-piotr/autotiling
-# https://github.com/davatorium/rofi
-# https://github.com/imputnet/helium-linux
-# https://github.com/saivert/pwvucontrol
-# https://github.com/be5invis/iosevka
-# https://github.com/GNOME/nautilus
+# autotiling
+# rofi
+# iosevka
+# mako
+# swaybg
 # xdg-desktop-portal-wlr & xdg-desktop-portal-gtk
+# kitty
 
 # desktop portal
 exec /usr/libexec/xdg-desktop-portal-gtk -r
@@ -18,9 +17,7 @@ exec "sh -c 'sleep 5;exec /usr/libexec/xdg-desktop-portal -r'"
 
 # apps
 exec_always autotiling
-exec_always gentoo-pipewire-launcher
-exec_always swaync
-exec_always emacs --daemon
+exec_always pipewire
 
 focus_follows_mouse no
 font pango:Iosevka 16
@@ -31,110 +28,86 @@ set $up k
 set $right l
 set $term kitty
 set $menu 'rofi -show drun -font "Iosevka 16"'
-set $browser 'helium'
-set $files 'nautilus'
-set $volume 'pwvucontrol'
+set $browser 'chromium'
+set $volume 'kitty --class wiremix -o remember_window_size=no -o initial_window_width=85c -o initial_window_height=21c wiremix'
 
 seat * xcursor_theme BreezeX-Black 24
 output * mode 2560x1440@360Hz
-output * bg "~/.wallpapers/abducted.png" fill
+output * bg "~/.config/sway/wallpapers/cat.png" fill
 input type:keyboard {
     xkb_layout "pl"
     repeat_rate 30
     repeat_delay 200
 }
 
+#
 ### Key bindings
 #
-# Basics:
-#
-    # Start a terminal
+    # Launch programs
     bindsym $mod+Return exec $term
-
-		# Start a web browser
 		bindsym $mod+b exec $browser
-
-		# Start a file browser
 		bindsym $mod+e exec $files
-
-		# Start volume mixer
 		bindsym $mod+v exec $volume
-
-    # Kill focused window
-    bindsym $mod+q kill
-
-    # Start your launcher
     bindsym $mod+Space exec $menu
 
-    # Drag floating windows by holding down $mod and left mouse button.
-    # Resize them with right mouse button + $mod.
-    # Despite the name, also works for non-floating windows.
-    # Change normal to inverse to use left mouse button for resizing and right
-    # mouse button for dragging.
-    floating_modifier $mod normal
-
-    # Reload the configuration file
+    # Maintenance
     bindsym $mod+Shift+r reload
-
-    # Exit sway (logs you out of your Wayland session)
     bindsym $mod+Shift+e exec 'swaymsg exit'
-#
-# Moving around:
-#
+
     # Move your focus around
     bindsym $mod+$left focus left
     bindsym $mod+$down focus down
     bindsym $mod+$up focus up
     bindsym $mod+$right focus right
 
-    # Move the focused window with the same, but add Shift
     bindsym $mod+Shift+$left move left
     bindsym $mod+Shift+$down move down
     bindsym $mod+Shift+$up move up
     bindsym $mod+Shift+$right move right
-#
-# Workspaces:
-#
-    # Switch to workspace
+
+    # Workspaces & windows
     bindsym $mod+1 workspace number 1
     bindsym $mod+2 workspace number 2
     bindsym $mod+3 workspace number 3
     bindsym $mod+4 workspace number 4
     bindsym $mod+5 workspace number 5
-    # Move focused container to workspace
     bindsym $mod+Shift+1 move container to workspace number 1
     bindsym $mod+Shift+2 move container to workspace number 2
     bindsym $mod+Shift+3 move container to workspace number 3
     bindsym $mod+Shift+4 move container to workspace number 4
     bindsym $mod+Shift+5 move container to workspace number 5
-    # Note: workspaces can have any name you want, not just numbers.
-    # We just use 1-10 as the default.
-#
-# Layout stuff:
-#
+    bindsym $mod+q kill
 
-    # Tabbed layout
+    # Layouts
     bindsym $mod+Shift+t layout tabbed
-
-    # Tiling layout
     bindsym $mod+t layout toggle split
-
-    # Make the current focus fullscreen
     bindsym $mod+f fullscreen
-
-    # Toggle the current focus between tiling and floating mode
     bindsym $mod+Shift+space floating toggle
+    floating_modifier $mod normal
+
+default_border none
+default_floating_border none
+gaps inner 6
+gaps outer 2
 
 bar {
     position bottom
+    status_command while date +'%I:%M  '; do sleep 1; done
 
-    status_command while date +'%Y-%m-%d %X'; do sleep 1; done
-
+    # kape colorscheme
     colors {
-        statusline #ffffff
-        background #323232
-        inactive_workspace #32323200 #32323200 #5c5c5c
+        background #181616
+        statusline #d4be98
+        separator  #2e2a2a
+
+        #                  border    background text
+        focused_workspace  #181616   #181616    #e7bb5c
+        active_workspace   #181616   #181616    #d4be98
+        inactive_workspace #181616   #181616    #c2c2c2
+        urgent_workspace   #181616   #181616    #b53535
+        binding_mode       #181616   #181616    #c87941
     }
 }
 
 include /etc/sway/config.d/*
+for_window [app_id="wiremix"] floating enable, move position center

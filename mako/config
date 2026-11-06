@@ -1,0 +1,28 @@
+# global
+font=Iosevka 16
+default-timeout=5000
+anchor=top-right
+layer=overlay
+
+# icons
+icons=0
+max-icon-size=48
+
+# colors
+text-color=#d4be98
+border-color=#181616
+background-color=#181616
+width=350
+height=150
+padding=7
+border-size=1
+outer-margin=3
+
+[app-name=Spotify]
+invisible=1
+
+[mode=do-not-disturb]
+invisible=true
+
+[mode=do-not-disturb app-name=notify-send]
+invisible=false
