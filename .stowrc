@@ -2,5 +2,6 @@
 --ignore=.stowrc
 --ignore=.DS_Store
 --ignore=README.md
+--ignore=extra
 --ignore=.git
 --ignore=.gitignore

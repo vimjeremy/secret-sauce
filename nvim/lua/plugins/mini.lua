@@ -8,7 +8,6 @@ return {
     require('mini.move').setup {}
     require('mini.git').setup {}
     require('mini.starter').setup {}
-    require('mini.notify').setup {}
     require('mini.icons').setup {}
     require('mini.extra').setup {}
 
@@ -29,7 +28,7 @@ return {
         { mode = { 'n', 'x' }, keys = 'g' },
         { mode = { 'n', 'x' }, keys = '"' },
         { mode = { 'i', 'c' }, keys = '<C-r>' },
-        { mode = 'n', keys = '<C-w>' },
+        { mode = 'n',          keys = '<C-w>' },
         { mode = { 'n', 'x' }, keys = 'z' },
       },
       clues = {

@@ -6,10 +6,6 @@ return {
       terminal = {},
       indent = {},
       image = {},
-      explorer = {},
-    },
-    keys = {
-      { '<leader>e', function() Snacks.explorer() end },
     },
   },
 }
