@@ -1,15 +1,4 @@
-# sway config i whipped up in 5 minutes and still use
-
-# Deps:
-# autotiling
-# rofi
-# iosevka
-# mako
-# swaybg
-# xdg-desktop-portal-wlr & xdg-desktop-portal-gtk
-# kitty
-
-# desktop portal
+# desktop portals
 exec /usr/libexec/xdg-desktop-portal-gtk -r
 exec /usr/libexec/xdg-desktop-portal-wlr -r
 exec /usr/libexec/flatpak-portal -r
@@ -18,18 +7,17 @@ exec "sh -c 'sleep 5;exec /usr/libexec/xdg-desktop-portal -r'"
 # apps
 exec_always autotiling
 exec_always pipewire
+exec_always mako
 
 focus_follows_mouse no
 font pango:Iosevka 16
 set $mod Mod4
-set $left h
-set $down j
-set $up k
-set $right l
+
 set $term kitty
 set $menu 'rofi -show drun -font "Iosevka 16"'
 set $browser 'chromium'
 set $volume 'kitty --class wiremix -o remember_window_size=no -o initial_window_width=85c -o initial_window_height=21c wiremix'
+set $screenshot 'grim -g "$(slurp -w 0)" - | swappy -f -'
 
 seat * xcursor_theme BreezeX-Black 24
 output * mode 2560x1440@360Hz
@@ -49,21 +37,22 @@ input type:keyboard {
 		bindsym $mod+e exec $files
 		bindsym $mod+v exec $volume
     bindsym $mod+Space exec $menu
+    bindsym $mod+Shift+s exec $screenshot
 
     # Maintenance
     bindsym $mod+Shift+r reload
     bindsym $mod+Shift+e exec 'swaymsg exit'
 
     # Move your focus around
-    bindsym $mod+$left focus left
-    bindsym $mod+$down focus down
-    bindsym $mod+$up focus up
-    bindsym $mod+$right focus right
+    bindsym $mod+h focus left
+    bindsym $mod+j focus down
+    bindsym $mod+k focus up
+    bindsym $mod+l focus right
 
-    bindsym $mod+Shift+$left move left
-    bindsym $mod+Shift+$down move down
-    bindsym $mod+Shift+$up move up
-    bindsym $mod+Shift+$right move right
+    bindsym $mod+Shift+h move left
+    bindsym $mod+Shift+j move down
+    bindsym $mod+Shift+k move up
+    bindsym $mod+Shift+l move right
 
     # Workspaces & windows
     bindsym $mod+1 workspace number 1

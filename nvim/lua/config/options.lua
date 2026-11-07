@@ -6,6 +6,7 @@ vim.o.nu = true
 vim.o.cursorline = true
 vim.o.signcolumn = 'yes'
 vim.o.relativenumber = true
+vim.o.wrap = false
 
 vim.o.splitbelow = true
 vim.o.splitright = true

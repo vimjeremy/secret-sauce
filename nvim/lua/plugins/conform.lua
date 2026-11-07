@@ -1,5 +1,6 @@
 local formatters = {
   lua = { 'stylua' },
+  c = { 'clang-format' },
 }
 
 return {
